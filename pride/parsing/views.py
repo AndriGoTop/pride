@@ -51,7 +51,7 @@ def news_view(request):
 
     return render(request, 'main/news.html', context)
 
-
+q
 # вводим данные из парсированной страницы
 def create_product(request):
     if request.method == 'POST':
