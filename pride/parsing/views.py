@@ -1,8 +1,11 @@
+from itertools import product
+
 import requests
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 from .models import Tools
 from django.core.paginator import Paginator
+from pars import parallellepiped
 
 
 def index(request):
@@ -47,3 +50,17 @@ def news_view(request):
     }
 
     return render(request, 'main/news.html', context)
+
+
+# вводим данные из парсированной страницы
+def create_product(request):
+    if request.method == 'POST':
+        # Получаем данные из POST-запроса
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
+        for item in parallellepiped():
+            Tools.objects.create(**item)
+        # Создаем и сохраняем объект в базе данных
+        #product = Tools(name=name, price=price, description=description)
+        #product.save()
