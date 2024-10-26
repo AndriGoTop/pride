@@ -4,6 +4,9 @@ from django.shortcuts import render
 from .models import Tools
 
 
+def index(request):
+    return render(request, "main/index.html")
+
 def parsing_site(request):
     # URL страницы с товарами
     url = "https://www.leroymerlin.ru/catalogue/stroymaterialy/"
