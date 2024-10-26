@@ -77,6 +77,10 @@ def parse_news_titles(url):
         print(f'Ошибка при запросе: {response.status_code}')
         return []
 
+def tools(request, tool_id):
+    tool = Tools.objects.get(pk=tool_id)
+    context = {'tool': tool}
+    return render(request, 'main/tool.html', context=context)
 
 def news_view(request):
     url = 'https://www.vseinstrumenti.ru/product/nabor-alkalinovyh-batareek-gp-24aa21-2crswc24-24-shtuki-19904-15683542/'  # Укажите реальный URL

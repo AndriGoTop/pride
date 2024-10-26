@@ -28,7 +28,7 @@
                     {% else %}
                     <div class="price-tools">Цена: {{ tool.price_ozon }}р</div>
                     {% endif %}
-                    <div class="away-tools"><a href="#">Перейти</a></div>
+                    <div class="away-tools"><a href="{% url 'tools' tool.pk %}">Перейти</a></div>
                 </div>
             </div>
         </div>
