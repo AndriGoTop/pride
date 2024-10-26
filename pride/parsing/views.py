@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from django.shortcuts import render
 from .models import Tools
 from django.core.paginator import Paginator
-from pars import parallellepiped
+from .pars import parallellepiped
 
 
 def index(request):
@@ -51,7 +51,7 @@ def news_view(request):
 
     return render(request, 'main/news.html', context)
 
-q
+
 # вводим данные из парсированной страницы
 def create_product(request):
     if request.method == 'POST':
@@ -62,5 +62,5 @@ def create_product(request):
         for item in parallellepiped():
             Tools.objects.create(**item)
         # Создаем и сохраняем объект в базе данных
-        #product = Tools(name=name, price=price, description=description)
-        #product.save()
+        product = Tools(name=name, price=price, description=description)
+        product.save()
