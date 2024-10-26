@@ -2,10 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 from .models import Tools
+from django.core.paginator import Paginator
 
 
 def index(request):
-    return render(request, "main/index.html")
+    tools = Tools.objects.all()
+    paginator = Paginator(tools, 10)
+    page_num = request.GET.get('page', 1)
+    page_objects = paginator.get_page(page_num)
+    context = {'tools': tools,
+               'page_obj': page_objects,
+               }
+    return render(request, "main/index.html", context=context)
+
+
 
 def parsing_site(request):
     # URL страницы с товарами

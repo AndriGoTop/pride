@@ -50,6 +50,23 @@ a {
     font-style: normal;
 }
 
+/* paginator */
+
+.page-link {
+    color: white;
+}
+
+.page-item {
+    display: inline;
+    margin-left: 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 /* tools */
 
 .tools {
