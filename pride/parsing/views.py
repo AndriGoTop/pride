@@ -10,8 +10,8 @@ def parsing_site(request):
 
     # Заголовки для маскировки под реального пользователя
     headers = {
-        "User-Agent": "ваш пользовательский агент",
-        "Accept-Language": "ru-RU,ru;q=0.9",
+        "Accept": '*/*',
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
     }
 
     response = requests.get(url, headers=headers)
