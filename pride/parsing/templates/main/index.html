@@ -17,7 +17,7 @@
 <div class="container">
     {% for tool in page_obj.object_list %}
     <div class="tools">
-        <div class="pic-tools" style="background-image: url({{ tool.image.url }});"></div>
+        <div class="pic-tools" style="background-image: url({{ tool.image }});"></div>
         <div class="right-tools">
             <div class="title-tools">{{ tool.name }}</div>
             <div class="info-tools">
@@ -28,7 +28,7 @@
                 <!--                    {% else %}-->
                 <!--                    <div class="price-tools">Цена: {{ tool.price_ozon }}р</div>-->
                 <!--                    {% endif %}-->
-                <div class="price-tools">Цена: {{ tool.price }}р</div>
+                <div class="price-tools" style="width: 100px;">Цена: {{ tool.price }}р</div>
                 <div class="away-tools"><a href="{% url 'tools' tool.pk %}">Перейти</a></div>
             </div>
         </div>

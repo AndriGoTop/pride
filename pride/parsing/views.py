@@ -7,7 +7,7 @@ from .models import Tools
 from django.core.paginator import Paginator
 from .pars import pars_rostovinstrument
 from django.http import JsonResponse
-
+from .pars import pars_rostovinstrument, pars_instrumentdon, pars_obi
 
 
 # def index(request):
@@ -40,7 +40,7 @@ from django.http import JsonResponse
 
 def tools(request, tool_id):
     tool = Tools.objects.get(pk=tool_id)
-    context = {'tool': tool}
+    context = {'tool': tool,}
     return render(request, 'main/tool.html', context=context)
 #
 # def news_view(request):
@@ -64,16 +64,19 @@ def save_data_to_db(catalog):
             Tools.objects.create(
                 name=tool.get('name'),
                 price=tool.get('price'),
-                image=tool.get('image')
+                image=tool.get('image'),
+                url=tool.get('url'),
             )
 
 
 # Основное представление, которое проверяет наличие данных и отображает их
 def articles_list(request):
-    # catalog = pars_rostovinstrument()
-
     # Сохранение данных
-    # save_data_to_db(catalog)
+    # save_data_to_db(pars_instrumentdon())
+    # save_data_to_db(pars_rostovinstrument())
+    # save_data_to_db(pars_obi())
+
+
 
     # Проверка данных в базе
     data_exists = Tools.objects.exists()
@@ -94,7 +97,7 @@ def articles_list(request):
 
 def run_parser():
     # Здесь вызываем ваш парсер
-    pars()
+    pars_instrumentdon()
+    pars_rostovinstrument()
     return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
 
-хуй
