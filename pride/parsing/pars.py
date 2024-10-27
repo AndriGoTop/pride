@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 # import json
 import time
 
-
+1
 # URL страницы, которую нужно спарсить
 def pars_rostovinstrument():
     url = "https://rostovinstrument.ru/catalog/elektroinstrument/"  # Замените URL на конкретную страницу товаров
