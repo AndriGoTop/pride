@@ -96,3 +96,5 @@ def run_parser():
     # Здесь вызываем ваш парсер
     pars()
     return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
+
+хуй
