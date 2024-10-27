@@ -86,7 +86,7 @@ def pars_800watt():
 
 def pars_instrumentdon():
     url = "https://instrumentdon.ru/catalog/"  # Замените URL на конкретную страницу товаров
-    max_pages = 235
+    max_pages = 10
     # Заголовки для имитации запроса от браузера
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
@@ -96,7 +96,7 @@ def pars_instrumentdon():
     for page in range(1, max_pages + 1):
         # Формируем URL для текущей страницы
         url = f"{url}?PAGEN_1={page}"
-        response = requests.get(url)
+        response = requests.get(url,headers=headers)
 
         # Проверяем успешность запроса
         if response.status_code == 200:
@@ -108,7 +108,6 @@ def pars_instrumentdon():
                 name = item.find(class_='item-title').text.strip()  # Замените на реальный класс
                 price = item.find(class_='price_value').text.strip()  # Замените на реальный класс
                 image = "https://instrumentdon.ru/" + str(item.find("img").get("data-src"))
-                print(image)
                 # Проверяем наличие изображения
 
                 image = image if image else "Изображение отсутствует"
@@ -122,4 +121,3 @@ def pars_instrumentdon():
             print(f"Ошибка при загрузке страницы {page}: {response.status_code}")
         time.sleep(1)
     return all_data
-pars_instrumentdon()

@@ -5,9 +5,8 @@ from bs4 import BeautifulSoup
 from django.shortcuts import render, redirect
 from .models import Tools
 from django.core.paginator import Paginator
-from .pars import pars_rostovinstrument
+from .pars import pars_rostovinstrument, pars_instrumentdon
 from django.http import JsonResponse
-
 
 def index(request):
     tools = Tools.objects.all()
@@ -69,10 +68,11 @@ def save_data_to_db(catalog):
 
 # Основное представление, которое проверяет наличие данных и отображает их
 def articles_list(request):
-    catalog = pars_rostovinstrument()
+    #catalog = pars.pars_rostovinstrument()
 
     # Сохранение данных
-    save_data_to_db(catalog)
+    # save_data_to_db(pars_rostovinstrument())
+    # save_data_to_db(pars_instrumentdon())
 
     # Проверка данных в базе
     data_exists = Tools.objects.exists()
@@ -88,5 +88,6 @@ def articles_list(request):
 
 def run_parser():
     # Здесь вызываем ваш парсер
-    pars()
-    return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
+    pars_rostovinstrument()
+    pars_instrumentdon()
+    #return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
