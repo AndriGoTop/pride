@@ -5,18 +5,20 @@ from bs4 import BeautifulSoup
 from django.shortcuts import render, redirect
 from .models import Tools
 from django.core.paginator import Paginator
-from .pars import pars_rostovinstrument, pars_instrumentdon
+from .pars import pars_rostovinstrument
 from django.http import JsonResponse
 
-def index(request):
-    tools = Tools.objects.all()
-    paginator = Paginator(tools, 10)
-    page_num = request.GET.get('page', 1)
-    page_objects = paginator.get_page(page_num)
-    context = {'tools': tools,
-               'page_obj': page_objects,
-               }
-    return render(request, "main/index.html", context=context)
+
+
+# def index(request):
+#     tools = Tools.objects.all()
+#     paginator = Paginator(tools, 10)
+#     page_num = request.GET.get('page', 1)
+#     page_objects = paginator.get_page(page_num)
+#     context = {'tools': tools,
+#                'page_obj': page_objects,
+#                }
+#     return render(request, "main/index.html", context=context)
 
 
 # def parse_news_titles(url):
@@ -36,10 +38,10 @@ def index(request):
 #         print(f'Ошибка при запросе: {response.status_code}')
 #         return []
 
-# def tools(request, tool_id):
-#     tool = Tools.objects.get(pk=tool_id)
-#     context = {'tool': tool}
-#     return render(request, 'main/tool.html', context=context)
+def tools(request, tool_id):
+    tool = Tools.objects.get(pk=tool_id)
+    context = {'tool': tool}
+    return render(request, 'main/tool.html', context=context)
 #
 # def news_view(request):
 #     url = 'https://www.vseinstrumenti.ru/product/nabor-alkalinovyh-batareek-gp-24aa21-2crswc24-24-shtuki-19904-15683542/'  # Укажите реальный URL
@@ -68,26 +70,29 @@ def save_data_to_db(catalog):
 
 # Основное представление, которое проверяет наличие данных и отображает их
 def articles_list(request):
-    #catalog = pars.pars_rostovinstrument()
+    # catalog = pars_rostovinstrument()
 
     # Сохранение данных
-    # save_data_to_db(pars_rostovinstrument())
-    # save_data_to_db(pars_instrumentdon())
+    # save_data_to_db(catalog)
 
     # Проверка данных в базе
     data_exists = Tools.objects.exists()
-
+    tools = Tools.objects.all()
+    paginator = Paginator(tools, 10)
+    page_num = request.GET.get('page', 1)
+    page_objects = paginator.get_page(page_num)
     # Получение всех записей
     articles = Tools.objects.all()
     context = {
         'articles': articles,
-        'data_exists': data_exists  # Передаем проверку в шаблон
+        'data_exists': data_exists, # Передаем проверку в шаблон
+        'tools': tools,
+        'page_obj': page_objects,
     }
 
-    return render(request, 'main/news.html', context)
+    return render(request, 'main/index.html', context)
 
 def run_parser():
     # Здесь вызываем ваш парсер
-    pars_rostovinstrument()
-    pars_instrumentdon()
-    #return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
+    pars()
+    return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})

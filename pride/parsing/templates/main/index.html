@@ -8,46 +8,50 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header>
-        <div class="container-header">
-            <a href="#" id="logo-header">toolSPACE</a>
-            <a href="#" id="catalog-header">каталог</a>
-        </div>
-    </header>
-    <div class="container">
-        {% for tool in page_obj.object_list %}
-        <div class="tools">
-            <div class="pic-tools" style="background-image: url({{ tool.image_tool.url }});"></div>
-            <div class="right-tools">
-                <div class="title-tools">{{ tool.title }}</div>
-                <div class="info-tools">
-                    {% if tool.price_ym < tool.price_wb and tool.price_ym < tool.price_ozon %}
-                    <div class="price-tools">Цена: {{ tool.price_ym }}р</div>
-                    {% elif tool.price_wb < tool.price_ym and tool.price_wb < tool.price_ozon %}
-                    <div class="price-tools">Цена: {{ tool.price_wb }}р</div>
-                    {% else %}
-                    <div class="price-tools">Цена: {{ tool.price_ozon }}р</div>
-                    {% endif %}
-                    <div class="away-tools"><a href="{% url 'tools' tool.pk %}">Перейти</a></div>
-                </div>
+<header>
+    <div class="container-header">
+        <a href="{% url 'home' %}" id="logo-header">toolSPACE</a>
+        <a href="#" id="catalog-header">каталог</a>
+    </div>
+</header>
+<div class="container">
+    {% for tool in page_obj.object_list %}
+    <div class="tools">
+        <div class="pic-tools" style="background-image: url({{ tool.image.url }});"></div>
+        <div class="right-tools">
+            <div class="title-tools">{{ tool.name }}</div>
+            <div class="info-tools">
+                <!--                    {% if tool.price_ym < tool.price_wb and tool.price_ym < tool.price_ozon %}-->
+                <!--                    <div class="price-tools">Цена: {{ tool.price_ym }}р</div>-->
+                <!--                    {% elif tool.price_wb < tool.price_ym and tool.price_wb < tool.price_ozon %}-->
+                <!--                    <div class="price-tools">Цена: {{ tool.price_wb }}р</div>-->
+                <!--                    {% else %}-->
+                <!--                    <div class="price-tools">Цена: {{ tool.price_ozon }}р</div>-->
+                <!--                    {% endif %}-->
+                <div class="price-tools">Цена: {{ tool.price }}р</div>
+                <div class="away-tools"><a href="{% url 'tools' tool.pk %}">Перейти</a></div>
             </div>
         </div>
-        {% endfor %}
-<!--        <div id="more-div"><a href="#" id="more">Показать еще</a></div>-->
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {% for p in page_obj.paginator.page_range %}
-                <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
-                {% endfor %}
-            </ul>
-        </nav>
     </div>
+    {% endfor %}
+    <!--        <div id="more-div"><a href="#" id="more">Показать еще</a></div>-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% for p in page_obj.paginator.page_range %}
+            <li class="page-item" style="text-align: center; margin-top: 20px;"><a class="page-link"
+                                                                                   href="?page={{ p }}"
+                                                                                   style="color: white;">{{ p }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
 
-    <footer>
-        <div class="container-footer">
-            <a href="#" id="logo-header">toolSPACE</a>
-            <a href="#" id="catalog-header">каталог</a>
-        </div>
-    </footer>
+<footer>
+    <div class="container-footer">
+        <a href="#" id="logo-header">toolSPACE</a>
+        <a href="#" id="catalog-header">каталог</a>
+    </div>
+</footer>
 </body>
 </html>

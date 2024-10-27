@@ -11,11 +11,11 @@ class Tools(models.Model):
     # url_ym = models.URLField(verbose_name="url яндекс маркет") # url на яндекс маркет
     # url_ozon = models.URLField(verbose_name="url ozon")  # url на ozon
     # url_wb = models.URLField(verbose_name="url wb")  # url на wb)
-    created_at = models.DateTimeField(default=timezone.now)  # Установка значения по умолчанию
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')  # Установка значения по умолчанию
     # еще нужно откуда то взять
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         verbose_name = 'Интсрумент'
