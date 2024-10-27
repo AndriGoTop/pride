@@ -122,4 +122,3 @@ def pars_instrumentdon():
             print(f"Ошибка при загрузке страницы {page}: {response.status_code}")
         # time.sleep(1)
     return all_data
-pars_obi()
