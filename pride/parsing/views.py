@@ -1,11 +1,12 @@
 from itertools import product
-
+from .models import Tools
 import requests
 from bs4 import BeautifulSoup
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Tools
 from django.core.paginator import Paginator
-from .pars import parallellepiped
+from .pars import pars
+from django.http import JsonResponse
 
 
 def index(request):
@@ -19,48 +20,68 @@ def index(request):
     return render(request, "main/index.html", context=context)
 
 
-def parse_news_titles(url):
-    # Отправляем GET-запрос к URL
-    response = requests.get(url)
+# def parse_news_titles(url):
+#     # Отправляем GET-запрос к URL
+#     response = requests.get(url)
+#
+#     if response.status_code == 200:
+#         # Парсим HTML-код страницы
+#         soup = BeautifulSoup(response.text, 'html.parser')
+#
+#         # Находим все элементы с классом 'news-title'
+#         titles = soup.find_all('p', class_='typography.heading.v2.-no-margin')
+#         print(titles, soup)
+#         # print(f'Ошибка при запросе: {response.status_code}')
+#         return [title.text.strip() for title in titles]
+#     else:
+#         print(f'Ошибка при запросе: {response.status_code}')
+#         return []
 
-    if response.status_code == 200:
-        # Парсим HTML-код страницы
-        soup = BeautifulSoup(response.text, 'html.parser')
+# def tools(request, tool_id):
+#     tool = Tools.objects.get(pk=tool_id)
+#     context = {'tool': tool}
+#     return render(request, 'main/tool.html', context=context)
+#
+# def news_view(request):
+#     url = 'https://www.vseinstrumenti.ru/product/nabor-alkalinovyh-batareek-gp-24aa21-2crswc24-24-shtuki-19904-15683542/'  # Укажите реальный URL
+#     titles = parse_news_titles(url)
+#
+#     context = {
+#         'titles': titles,
+#     }
+#
+#     return render(request, 'main/news.html', context)
 
-        # Находим все элементы с классом 'news-title'
-        titles = soup.find_all('p', class_='typography.heading.v2.-no-margin')
-        print(titles, soup)
-        # print(f'Ошибка при запросе: {response.status_code}')
-        return [title.text.strip() for title in titles]
-    else:
-        print(f'Ошибка при запросе: {response.status_code}')
-        return []
 
-def tools(request, tool_id):
-    tool = Tools.objects.get(pk=tool_id)
-    context = {'tool': tool}
-    return render(request, 'main/tool.html', context=context)
+# В файле views.py или другом скрипте
 
-def news_view(request):
-    url = 'https://www.vseinstrumenti.ru/product/nabor-alkalinovyh-batareek-gp-24aa21-2crswc24-24-shtuki-19904-15683542/'  # Укажите реальный URL
-    titles = parse_news_titles(url)
 
+# Функция для сохранения данных в базу
+def save_data_to_db(catalog):
+    for tool in catalog:
+        Tools.objects.create(
+            name=tool.get('name'),
+            price=tool.get('price'),
+            image=tool.get('image')
+        )
+        #article.save()
+
+
+# Основное представление, которое проверяет наличие данных и отображает их
+def articles_list(request):
+    catalog = pars()
+
+    # Сохранение данных
+    save_data_to_db(catalog)
+
+    # Проверка данных в базе
+    data_exists = Tools.objects.exists()
+
+    # Получение всех записей
+    articles = Tools.objects.all()
     context = {
-        'titles': titles,
+        'articles': articles,
+        'data_exists': data_exists  # Передаем проверку в шаблон
     }
 
     return render(request, 'main/news.html', context)
-
-
-# вводим данные из парсированной страницы
-def create_product(request):
-    if request.method == 'POST':
-        # Получаем данные из POST-запроса
-        name = request.POST.get('name')
-        price = request.POST.get('price')
-        description = request.POST.get('description')
-        for item in parallellepiped():
-            Tools.objects.create(**item)
-        # Создаем и сохраняем объект в базе данных
-        product = Tools(name=name, price=price, description=description)
-        product.save()
