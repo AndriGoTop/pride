@@ -5,7 +5,7 @@ import time
 
 
 # URL страницы, которую нужно спарсить
-def pars():
+def pars_rostovinstrument():
     url = "https://rostovinstrument.ru/catalog/elektroinstrument/"  # Замените URL на конкретную страницу товаров
 
     # Заголовки для имитации запроса от браузера
@@ -44,3 +44,5 @@ def pars():
         # Задержка между запросами (по желанию)
         time.sleep(1)
     return (catalog)
+
+def pars_

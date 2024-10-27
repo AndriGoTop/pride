@@ -15,7 +15,7 @@
 
 <ul>
     {% for article in articles %}
-        <li>{{ article.name }} - {{ article.price }} - <img src="{{ article.image.url }}" alt="{{ article.name }}"></li>
+    <li><img src="{{ article.image }}" alt="{{ article.name }}" width="200" height="159"> {{ article.name }} - {{ article.price }} -
     {% endfor %}
 </ul>
 </body>

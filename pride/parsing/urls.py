@@ -4,5 +4,6 @@ from . import views
 urlpatterns = [
     path("", views.index),
     #path("tool/<int:tool_id>", views.tools, name='tools'),
-    path('qwerty/', views.articles_list)
+    path('qwerty/', views.articles_list),
+    path("run_server", views.run_parser),
 ]
