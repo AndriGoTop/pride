@@ -1,1 +1,1 @@
-web: gunicorn pride.wsgi
+gunicorn pride.wsgi:application
