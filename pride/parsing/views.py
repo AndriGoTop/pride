@@ -1,103 +1,63 @@
-from itertools import product
-from .models import Tools
-import requests
-from bs4 import BeautifulSoup
 from django.shortcuts import render, redirect
 from .models import Tools
 from django.core.paginator import Paginator
-from .pars import pars_rostovinstrument
 from django.http import JsonResponse
-from .pars import pars_rostovinstrument, pars_instrumentdon, pars_obi
+from .pars import run_all_parsers
+import asyncio
+from asgiref.sync import sync_to_async
 
-
-# def index(request):
-#     tools = Tools.objects.all()
-#     paginator = Paginator(tools, 10)
-#     page_num = request.GET.get('page', 1)
-#     page_objects = paginator.get_page(page_num)
-#     context = {'tools': tools,
-#                'page_obj': page_objects,
-#                }
-#     return render(request, "main/index.html", context=context)
-
-
-# def parse_news_titles(url):
-#     # Отправляем GET-запрос к URL
-#     response = requests.get(url)
-#
-#     if response.status_code == 200:
-#         # Парсим HTML-код страницы
-#         soup = BeautifulSoup(response.text, 'html.parser')
-#
-#         # Находим все элементы с классом 'news-title'
-#         titles = soup.find_all('p', class_='typography.heading.v2.-no-margin')
-#         print(titles, soup)
-#         # print(f'Ошибка при запросе: {response.status_code}')
-#         return [title.text.strip() for title in titles]
-#     else:
-#         print(f'Ошибка при запросе: {response.status_code}')
-#         return []
 
 def tools(request, tool_id):
     tool = Tools.objects.get(pk=tool_id)
-    context = {'tool': tool,}
+    context = {'tool': tool, }
     return render(request, 'main/tool.html', context=context)
-#
-# def news_view(request):
-#     url = 'https://www.vseinstrumenti.ru/product/nabor-alkalinovyh-batareek-gp-24aa21-2crswc24-24-shtuki-19904-15683542/'  # Укажите реальный URL
-#     titles = parse_news_titles(url)
-#
-#     context = {
-#         'titles': titles,
-#     }
-#
-#     return render(request, 'main/news.html', context)
 
 
-# В файле views.py или другом скрипте
+# Асинхронная функция для сохранения данных в базу с использованием bulk_create
+# Асинхронная функция для сохранения данных в базу с уникальной проверкой
+async def save_data_to_db_async(catalog):
+    new_tools = []
 
-
-# Функция для сохранения данных в базу
-def save_data_to_db(catalog):
     for tool in catalog:
-        if not Tools.objects.filter(name=tool['name']).exists():
-            Tools.objects.create(
-                name=tool.get('name'),
-                price=tool.get('price'),
-                image=tool.get('image'),
-                url=tool.get('url'),
+        # Проверяем наличие товара с таким же URL, чтобы избежать дубликатов
+        tool_exists = await sync_to_async(Tools.objects.filter(url=tool['url']).exists)()
+        if not tool_exists:
+            new_tools.append(
+                Tools(
+                    name=tool['name'],
+                    price=tool['price'],
+                    image=tool['image'],
+                    url=tool['url']
+                )
             )
 
+    await sync_to_async(Tools.objects.bulk_create)(new_tools)
 
-# Основное представление, которое проверяет наличие данных и отображает их
+
+# Асинхронное представление для отображения и проверки данных
 def articles_list(request):
-    # Сохранение данных
-    # save_data_to_db(pars_instrumentdon())
-    # save_data_to_db(pars_rostovinstrument())
-    # save_data_to_db(pars_obi())
+    # Сохранение данных из нескольких источников
+    # save = asyncio.run(run_all_parsers())  # Парсим данные
+    # save_data_to_db_async(save)  # Сохраняем данные в базу
 
-
-
-    # Проверка данных в базе
+    # Проверка наличия данных в базе
     data_exists = Tools.objects.exists()
-    tools = Tools.objects.all()
-    paginator = Paginator(tools, 10)
-    page_num = request.GET.get('page', 1)
-    page_objects = paginator.get_page(page_num)
-    # Получение всех записей
-    articles = Tools.objects.all()
+    tools = Tools.objects.all()  # Получаем список всех товаров для пагинации
+
+    # Пагинация
+    paginator = Paginator(tools, 10)  # Показываем 10 товаров на странице
+    page_num = request.GET.get('page', 1)  # Получаем номер страницы из запроса
+    page_objects = paginator.get_page(page_num)  # Текущая страница
+
     context = {
-        'articles': articles,
-        'data_exists': data_exists, # Передаем проверку в шаблон
-        'tools': tools,
+        'data_exists': data_exists,
         'page_obj': page_objects,
     }
 
     return render(request, 'main/index.html', context)
 
+
 def run_parser():
     # Здесь вызываем ваш парсер
-    pars_instrumentdon()
-    pars_rostovinstrument()
+    asyncio.run(run_all_parsers())
     return JsonResponse({'status': 'Парсер выполнен и данные добавлены!'})
-
