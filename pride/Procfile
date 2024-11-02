@@ -1,1 +1,1 @@
-web: gunicorn pride.wsgi
+web: gunicorn pride.wsgi --log-file -
