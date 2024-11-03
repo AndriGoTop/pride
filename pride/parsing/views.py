@@ -37,8 +37,8 @@ async def save_data_to_db_async(catalog):
 # Асинхронное представление для отображения и проверки данных
 def articles_list(request):
     # Сохранение данных из нескольких источников
-    # save = asyncio.run(run_all_parsers())  # Парсим данные
-    # save_data_to_db_async(save)  # Сохраняем данные в базу
+    save = asyncio.run(run_all_parsers())  # Парсим данные
+    save_data_to_db_async(save)  # Сохраняем данные в базу
 
     # Проверка наличия данных в базе
     #data_exists = Tools.objects.exists()
