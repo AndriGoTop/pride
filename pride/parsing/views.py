@@ -41,7 +41,7 @@ def articles_list(request):
     # save_data_to_db_async(save)  # Сохраняем данные в базу
 
     # Проверка наличия данных в базе
-    data_exists = Tools.objects.exists()
+    #data_exists = Tools.objects.exists()
     tools = Tools.objects.all()  # Получаем список всех товаров для пагинации
 
     # Пагинация
