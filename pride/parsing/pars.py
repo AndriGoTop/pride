@@ -30,7 +30,7 @@ async def pars_obi_async():
                 url = 'https://obi.ru' + product.select_one("a")['href'] if product.select_one(
                     "a") else "URL отсутствует"
                 catalog.append({"name": name, "price": price, "image": image, "url": url})
-            #print(catalog)
+            print(catalog)
     return catalog
 
 
@@ -77,6 +77,7 @@ async def pars_instrumentdon_async():
                 url = "https://instrumentdon.ru" + product.find("a").get("href") if product.find(
                     "a") else "URL отсутствует"
                 catalog.append({"name": name, "price": price, "image": image, "url": url})
+    #print(catalog)
     return catalog
 
 
@@ -97,3 +98,4 @@ async def run_all_parsers():
     # print(f"InstrumentDon: {len(instrumentdon_data)} товаров.")
     catalog = obi_data + rostovinstrument_data + instrumentdon_data
     return catalog
+# asyncio.run(run_all_parsers())

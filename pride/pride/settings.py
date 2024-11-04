@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-pe&i#efuhp3rs==7%_rnwxl!%!hp%ynk@n9p3t7orq9%_-*a_+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pride-nnze.onrender.com', 'localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'pride.urls'

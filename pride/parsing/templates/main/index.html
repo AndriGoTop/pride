@@ -18,13 +18,14 @@
 
 <div class="container">
     {% for tool in page_obj.object_list %}
-        <div class="tools">
+        <div class="tools" style="border-radius: 10px;">
             <div class="pic-tools" style="background-image: url({{ tool.image }});"></div>
             <div class="right-tools">
-                <div class="title-tools">{{ tool.name }}</div>
+                <div class="title-tools" style="margin-left:-10px;">{{ tool.name }}</div>
                 <div class="info-tools">
-                    <div class="price-tools" style="width: 100px;">Цена: {{ tool.price }}р</div>
+                    <div class="price-tools">Цена: {{ tool.price }}р</div>
                     <div class="away-tools"><a href="{% url 'tools' tool.pk %}">Перейти</a></div>
+
                 </div>
             </div>
         </div>
@@ -77,10 +78,10 @@
 </div>
 
 <footer>
-    <div class="container-footer">
-        <a href="{% url 'home' %}" id="logo-header">toolSPACE</a>
-        <a href="#" id="catalog-header">Каталог</a>
-    </div>
+<!--    <div class="container-footer">-->
+<!--        <a href="{% url 'home' %}" id="logo-header">toolSPACE</a>-->
+<!--        <a href="#" id="catalog-header">Каталог</a>-->
+<!--    </div>-->
 </footer>
 </body>
 </html>
