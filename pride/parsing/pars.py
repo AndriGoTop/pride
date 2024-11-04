@@ -30,7 +30,7 @@ async def pars_obi_async():
                 url = 'https://obi.ru' + product.select_one("a")['href'] if product.select_one(
                     "a") else "URL отсутствует"
                 catalog.append({"name": name, "price": price, "image": image, "url": url})
-            print(catalog)
+            # print(catalog)
     return catalog
 
 
