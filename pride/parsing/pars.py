@@ -1,7 +1,7 @@
 import aiohttp
 import asyncio
 from bs4 import BeautifulSoup
-import time
+
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
 }
@@ -10,7 +10,7 @@ headers = {
 # Асинхронные функции для парсинга сайтов
 async def pars_obi_async():
     base_url = "https://obi.ru/instrument"
-    max_pages = 10
+    max_pages = 2
     catalog = []
 
     async with aiohttp.ClientSession(headers=headers) as session:
@@ -25,8 +25,8 @@ async def pars_obi_async():
                     "._1UlGi") else "Название не найдено"
                 price = product.select_one("._3IeOW").get_text(strip=True)[:-1] if product.select_one(
                     "._3IeOW") else "Цена не указана"
-                image = product.select_one("._2yMrf._3bk5Y img")['src'] if product.select_one(
-                    "._2yMrf._3bk5Y img") else "Изображение отсутствует"
+                image = product.find("source").get("srcset").split(',')[0].split(' ')[0] if product.find(
+                    "source") else "Изображение отсутствует"
                 url = 'https://obi.ru' + product.select_one("a")['href'] if product.select_one(
                     "a") else "URL отсутствует"
                 catalog.append({"name": name, "price": price, "image": image, "url": url})
@@ -49,14 +49,15 @@ async def pars_rostovinstrument_async():
                                                                                             class_="price_value") else "Цена не указана"
             image = "https://rostovinstrument.ru" + product.find("img").get("data-src") if product.find(
                 "img") else "Изображение отсутствует"
-            url = "https://instrumentdon.ru" + product.find("a").get("href") if product.find("a") else "URL отсутствует"
+            url = "https://rostovinstrument.ru" + product.find("a").get("href") if product.find(
+                "a") else "URL отсутствует"
             catalog.append({"name": name, "price": price, "image": image, "url": url})
     return catalog
 
 
 async def pars_instrumentdon_async():
     base_url = "https://instrumentdon.ru/catalog/"
-    max_pages = 10
+    max_pages = 2
     catalog = []
 
     async with aiohttp.ClientSession(headers=headers) as session:
@@ -77,7 +78,7 @@ async def pars_instrumentdon_async():
                 url = "https://instrumentdon.ru" + product.find("a").get("href") if product.find(
                     "a") else "URL отсутствует"
                 catalog.append({"name": name, "price": price, "image": image, "url": url})
-    #print(catalog)
+    # print(catalog)
     return catalog
 
 
@@ -98,4 +99,4 @@ async def run_all_parsers():
     # print(f"InstrumentDon: {len(instrumentdon_data)} товаров.")
     catalog = obi_data + rostovinstrument_data + instrumentdon_data
     return catalog
-# asyncio.run(run_all_parsers())
+# print(*asyncio.run(run_all_parsers()))

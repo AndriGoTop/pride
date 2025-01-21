@@ -1,29 +1,28 @@
 from django.shortcuts import render, redirect
-from .models import Tools
+from .models import Product
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .pars import run_all_parsers
 import asyncio
-from asgiref.sync import sync_to_async
 
 
 def tools(request, tool_id):
-    tool = Tools.objects.get(pk=tool_id)
+    tool = Product.objects.get(pk=tool_id)
     context = {'tool': tool, }
     return render(request, 'main/tool.html', context=context)
 
 
 # Асинхронная функция для сохранения данных в базу с использованием bulk_create
 # Асинхронная функция для сохранения данных в базу с уникальной проверкой
-async def save_data_to_db_async(catalog):
+def save_data_to_db_async(catalog):
     new_tools = []
 
     for tool in catalog:
         # Проверяем наличие товара с таким же URL, чтобы избежать дубликатов
-        tool_exists = await sync_to_async(Tools.objects.filter(url=tool['url']).exists)()
+        tool_exists = Product.objects.filter(url=tool['url']).exists()
         if not tool_exists:
             new_tools.append(
-                Tools(
+                Product(
                     name=tool['name'],
                     price=tool['price'],
                     image=tool['image'],
@@ -31,18 +30,19 @@ async def save_data_to_db_async(catalog):
                 )
             )
 
-    await sync_to_async(Tools.objects.bulk_create)(new_tools)
+    Product.objects.bulk_create(new_tools)
 
 
 # Асинхронное представление для отображения и проверки данных
 def articles_list(request):
     # Сохранение данных из нескольких источников
-    # save = asyncio.run(run_all_parsers())  # Парсим данные
-    # save_data_to_db_async(save)  # Сохраняем данные в базу
+
+    save = asyncio.run(run_all_parsers())  # Парсим данные
+    save_data_to_db_async(save)  # Сохраняем данные в базу
 
     # Проверка наличия данных в базе
-    #data_exists = Tools.objects.exists()
-    tools = Tools.objects.all()  # Получаем список всех товаров для пагинации
+    data_exists = Product.objects.exists()
+    tools = Product.objects.all()  # Получаем список всех товаров для пагинации
 
     # Пагинация
     paginator = Paginator(tools, 10)  # Показываем 10 товаров на странице

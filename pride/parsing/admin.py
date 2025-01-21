@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Tools
+from .models import Product
 # Register your models here.
-admin.site.register(Tools)
+admin.site.register(Product)
