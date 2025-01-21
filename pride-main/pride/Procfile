@@ -1,1 +1,0 @@
-gunicorn pride.wsgi:application
